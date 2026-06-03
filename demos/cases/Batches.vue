@@ -49,17 +49,19 @@ function handleToolbarChange({ value, item }) {
 		</div>
 		<div>
 			<h3>Tabbar</h3>
-			<div class="bg">
-				<Editor
-					:top-bar="false"
-					:items="batchItems"
-					:values="values"
-					:active-batch="activeBatch"
-				>
-					<div class="top">
-						<Tabs :options="options" v-model:value="activeBatch" />
-					</div>
-				</Editor>
+			<div class="bg" style="height: 400px">
+				<div class="bg">
+					<Editor
+						:top-bar="false"
+						:items="batchItems"
+						:values="values"
+						:active-batch="activeBatch"
+					>
+						<div class="top">
+							<Tabs :options="options" v-model:value="activeBatch" />
+						</div>
+					</Editor>
+				</div>
 			</div>
 		</div>
 		<div>

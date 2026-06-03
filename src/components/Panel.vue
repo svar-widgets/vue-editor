@@ -119,7 +119,7 @@ watchEffect(() => {
 
 <template>
 	<div :class="props.css" ref="node" tabindex="-1" style="outline: none;">
-		<Toolbar v-bind="props.topBar" :items="tbar" :values="props.data" :onclick="props.onclick" :onchange="props.onchange" />
+		<Toolbar v-bind="props.topBar" :items="tbar" :values="props.data" :onclick="props.onclick" />
 		<div class="wx-content" :class="{ 'wx-layout-columns': props.layout === 'columns' }">
 			<slot v-if="$slots.default" />
 			<Columns
@@ -137,7 +137,6 @@ watchEffect(() => {
 				:values="props.data"
 				:top="false"
 				:onclick="props.onclick"
-				:onchange="props.onchange"
 			/>
 		</div>
 	</div>

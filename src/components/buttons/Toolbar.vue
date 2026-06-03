@@ -10,6 +10,8 @@ const props = defineProps({
 	top: { default: true },
 	onclick: { type: Function },
 	onchange: { type: Function },
+	css: { default: "" },
+	layout: { default: "row" },
 });
 
 const onchange = ({ item, value }) => {
@@ -21,13 +23,14 @@ const onchange = ({ item, value }) => {
 	<div
 		v-if="items.length"
 		class="wx-editor-toolbar"
-		:class="{ 'wx-topbar': top, 'wx-bottom': !top }"
+		:class="[css, { 'wx-topbar': top, 'wx-bottom': !top }]"
 	>
 		<Toolbar
 			:items="items"
 			:values="toRaw(values)"
 			:onclick="onclick"
 			:onchange="onchange"
+			:layout="layout"
 		/>
 	</div>
 </template>
