@@ -97,13 +97,16 @@ watchEffect(() => {
 					</div>
 				</div>
 				<div class="box-links">
-					<Link
-						v-for="data in links"
-						:key="data[0]"
-						:data="data"
-						:skin="skin"
-						@click="() => { if (isMobileView) show = false; }"
-					/>
+					<template v-for="group in links" :key="group.group">
+						<div v-if="group.group" class="group-title">{{ group.group }}</div>
+						<Link
+							v-for="data in group.items"
+							:key="data[0]"
+							:data="data"
+							:skin="skin"
+							@click="() => { if (isMobileView) show = false; }"
+						/>
+					</template>
 				</div>
 			</div>
 		</div>
@@ -519,6 +522,20 @@ a {
 	display: flex;
 	flex-direction: column;
 	gap: 6px;
+}
+
+.group-title {
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.6px;
+	text-transform: uppercase;
+	color: var(--wx-color-font-alt);
+	padding: 20px 16px 2px 16px;
+}
+
+.box-links > .group-title:first-child {
+	margin-top: 0;
+	border-top: none;
 }
 
 .hint {

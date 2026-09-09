@@ -1,10 +1,10 @@
-import { ref, computed } from 'vue';
+import { ref, computed } from "vue";
 
 export function link(getValue) {
 	const localState = ref(undefined);
 	const linkedDerived = computed(() => {
 		const linkedValue = getValue();
-		return typeof localState.value !== 'undefined'
+		return typeof localState.value !== "undefined"
 			? localState.value
 			: linkedValue;
 	});

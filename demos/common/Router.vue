@@ -2,7 +2,7 @@
 defineOptions({ name: "DemoRouter" });
 import { onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
-import { getLinks } from "./helpers";
+import { getFlatLinks } from "./helpers";
 
 const props = defineProps({
 	skin: {},
@@ -19,7 +19,7 @@ const baseLink =
 	props.productTag +
 	"/blob/main/demos/cases/";
 
-const links = getLinks();
+const links = getFlatLinks();
 
 const router = useRouter();
 router.afterEach((to) => {
@@ -45,8 +45,9 @@ function onRouteChange(path) {
 	const tPage = `/${page}/:skin`;
 	const matched = links.find((a) => a[0] === tPage);
 	const title = matched?.[1] ?? "";
-	const filename = matched?.[3] ?? "";
-	const link = `${baseLink}${filename.replace(/\s+/g, "")}.vue`;
+	const opts = matched?.[3] ?? {};
+	const name = opts.file ?? title;
+	const link = `${baseLink}${name.replace(/\s+/g, "")}.vue`;
 
 	emit("onnewpage", {
 		page: page,

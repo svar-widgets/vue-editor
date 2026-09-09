@@ -2,8 +2,9 @@
 defineOptions({ name: "EditorComponentsValues" });
 
 import { ref, computed, watch, inject } from "vue";
-import { itemsToEditors } from "../editor";
-import { dataLink } from "./Helpers.js";
+
+import { itemsToEditors } from "../helpers/editor";
+import { dataLink } from "./Helpers";
 
 // core widgets lib
 import { deepCopy, isSame } from "@svar-ui/lib-state";
@@ -36,7 +37,7 @@ const props = defineProps({
 const activatedSection = ref(null);
 
 const editors = computed(() => {
-	const editorResult = itemsToEditors(props.items);
+	const editorResult = itemsToEditors(props.items ?? []);
 
 	if (activatedSection.value) {
 		editorResult.config.forEach(x => {
@@ -69,17 +70,17 @@ const editors = computed(() => {
 	});
 
 	editorResult.config.forEach(x => {
-		x.hidden =
+		x.hidden = !!(
 			x.hidden ||
 			(props.activeBatch && props.activeBatch !== x.batch) ||
 			(exclusive && x.key != exclusive && x.section !== exclusive) ||
-			(x.section && !sections.has(x.section));
+			(x.section && !sections.has(x.section))
+		);
 	});
 
 	if (props.readonly) {
 		return {
 			...editorResult,
-			config: editorResult.config.map(s => ({ ...s, comp: "readonly" })),
 			diff: () => [],
 		};
 	}
@@ -90,14 +91,22 @@ const actualValues = ref({});
 const data = ref({});
 
 const d = dataLink(() => props.values && null);
+
 // $effect.pre equivalent - watch with flush: 'pre' for values changes
 watch(
 	() => props.values,
-	() => {
-		// Store the current d.errors state before resetting, to use untrack-like behavior
+	nextValues => {
+		// store the current d.errors state before resetting, to use untrack-like behavior
 		const currentErrors = d.errors;
-		actualValues.value = deepCopy(props.values);
-		data.value = deepCopy(props.values);
+		actualValues.value = deepCopy(nextValues);
+		data.value = deepCopy(nextValues);
+		// multi-field items keep a composite object under the item key,
+		// which does not exist in the raw values shape
+		if (data.value) {
+			editors.value.config.forEach(ed => {
+				if (ed.keys?.length) data.value[ed.key] = ed.getter(data.value);
+			});
+		}
 		if (currentErrors) {
 			d.errors = runValidation([]);
 		}
@@ -110,16 +119,16 @@ const notSaved = ref([]);
 // reset notSaved when values are changed
 watch(
 	() => props.values,
-	() => {
-		notSaved.value = [];
+	values => {
+		if (values) notSaved.value = [];
 	}
 );
 
 function handleChanges({ value, key, input }) {
-    // vue can define onclick to html elements which normally need not support it
-    if (typeof key === "undefined") return;
-  
-    data.value[key] = value;
+	// vue can define onclick to html elements which normally need not support it
+	if (typeof key === "undefined") return;
+
+	data.value[key] = value;
 	const event = {
 		key,
 		value,
@@ -175,7 +184,11 @@ function getUniqueFields(arr) {
 }
 
 function runValidation(changes) {
-	const check = editors.value.validateValues(actualValues.value, changes, _);
+	const check = editors.value.validateValues(
+		actualValues.value,
+		changes,
+		_
+	);
 
 	if (!isSame(check, d.errors)) {
 		props.onvalidation?.({ errors: check, values: actualValues.value });
@@ -185,15 +198,19 @@ function runValidation(changes) {
 }
 
 function handleAction({ item }) {
-    // vue can define onclick to html elements which normally need not support it
-    if (typeof item === "undefined" || typeof item.id === "undefined") return;
+	// vue can define onclick to html elements which normally need not support it
+	if (typeof item === "undefined" || typeof item.id === "undefined") return;
 
 	if (item.id === "save") {
 		saveAction();
 	} else if (item.id === "toggle-section") {
 		activatedSection.value = item.key;
 	}
-	props.onaction?.({ item, values: actualValues.value, changes: notSaved.value });
+	props.onaction?.({
+		item,
+		values: actualValues.value,
+		changes: notSaved.value,
+	});
 }
 
 function saveAction() {

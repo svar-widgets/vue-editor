@@ -3,11 +3,12 @@ defineOptions({ name: "EditorEditor" });
 
 import { useAttrs } from "vue";
 import { Locale } from "@svar-ui/vue-core";
-import en from "../en.js";
+import { en } from "@svar-ui/editor-locales";
 
 import Layout from "./Layout.vue";
 import Values from "./Values.vue";
 
+// incoming parameters
 const props = defineProps({
 	values: { default: () => ({}) },
 	items: { default: () => [] },

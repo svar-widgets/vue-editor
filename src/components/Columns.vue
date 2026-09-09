@@ -1,8 +1,8 @@
 <script setup>
-defineOptions({ name: 'EditorColumnsColumns' });
+defineOptions({ name: "EditorColumnsColumns" });
 
-import { computed } from 'vue';
-import Editor from './FormEditor.vue';
+import { computed } from "vue";
+import Editor from "./FormEditor.vue";
 
 const props = defineProps({
 	editors: {},
@@ -10,29 +10,30 @@ const props = defineProps({
 	layout: {},
 	errors: {},
 	focus: {},
+	readonly: {},
 	onclick: { type: Function },
 	onchange: { type: Function },
 });
 
 const columns = computed(() => {
 	let cols = [];
-	if (props.layout === 'columns') {
+	if (props.layout === "columns") {
 		cols = [
 			{ ...props.editors, config: [] },
 			{ ...props.editors, config: [] },
 		];
 		props.editors.config.forEach(field => {
-			const index = field.column === 'left' ? 0 : 1;
+			const index = field.column === "left" ? 0 : 1;
 			cols[index].config.push(field);
 		});
 
 		if (cols[0].config.length) {
 			const obj = cols[0].config[0];
-			if (obj.comp === 'text') {
+			if (obj.comp === "text") {
 				cols[0][0] = {
 					...obj,
-					css: 'title',
-					label: '',
+					css: "title",
+					label: "",
 				};
 			}
 		}
@@ -46,6 +47,7 @@ const columns = computed(() => {
 		<div class="wx-left">
 			<Editor
 				:editors="columns[0]"
+				:readonly="props.readonly"
 				:data="props.data"
 				:errors="props.errors"
 				:onclick="props.onclick"
@@ -57,6 +59,7 @@ const columns = computed(() => {
 				:editors="columns[1]"
 				:data="props.data"
 				:focus="props.focus"
+				:readonly="props.readonly"
 				:errors="props.errors"
 				:onclick="props.onclick"
 				:onchange="props.onchange"
@@ -68,6 +71,7 @@ const columns = computed(() => {
 		:editors="props.editors"
 		:data="props.data"
 		:focus="props.focus"
+		:readonly="props.readonly"
 		:errors="props.errors"
 		:onclick="props.onclick"
 		:onchange="props.onchange"

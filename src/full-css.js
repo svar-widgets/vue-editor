@@ -3,10 +3,7 @@
 // Import base component styles
 import '@svar-ui/vue-core/style.css';
 import '@svar-ui/vue-toolbar/style.css';
-import '@svar-ui/vue-menu/style.css';
-import '@svar-ui/vue-comments/style.css';
-import '@svar-ui/vue-tasklist/style.css';
 
 // Import component styles
-import * as data from './index.js';
+import * as data from './index';
 export default data;

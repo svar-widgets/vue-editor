@@ -327,17 +327,14 @@ export function getData() {
 			comp: "text",
 			key: "firstName",
 			label: "First name",
-			validation: val => {
-				const regEx = /^[a-zA-Z]+$/;
-				return val && regEx.test(val);
-			},
+			required: true,
 			validationMessage: "Incorrect name!",
 		},
 		{
 			comp: "text",
 			key: "lastName",
 			label: "Last name",
-			validation: val => {
+			validation: (val) => {
 				const regEx = /^[a-zA-Z]+$/;
 				return val && regEx.test(val);
 			},
@@ -347,13 +344,13 @@ export function getData() {
 			comp: "text",
 			key: "company",
 			label: "Company",
-			validation: val => val.length > 2,
+			validation: (val) => val.length > 2,
 		},
 		{
 			comp: "text",
 			key: "contact",
 			label: "Contact number",
-			validation: val => {
+			validation: (val) => {
 				const regEx = /^\+?\d*$/;
 				return val.length > 9 && regEx.test(val);
 			},
@@ -363,7 +360,8 @@ export function getData() {
 			comp: "text",
 			key: "email",
 			label: "Email",
-			validation: val => {
+			required: true,
+			validation: (val) => {
 				//eslint-disable-next-line
 				const regEx = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
 				return val && regEx.test(val);
@@ -374,7 +372,7 @@ export function getData() {
 			comp: "textarea",
 			key: "additional",
 			label: "Additional information",
-			validation: val => val.length >= 20 && val.length <= 160,
+			validation: (val) => val.length >= 20 && val.length <= 160,
 			validationMessage:
 				"Value should have at least 20 characters and no more than 160 characters",
 		},

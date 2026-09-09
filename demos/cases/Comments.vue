@@ -1,15 +1,15 @@
 <script setup>
 defineOptions({ name: "EditorComments" });
 
-import { ref } from 'vue';
+import { ref } from "vue";
 import { getData } from "../data";
 import { Editor, registerEditorItem } from "../../src";
 
 import { Comments } from "@svar-ui/vue-comments";
 registerEditorItem("comments", Comments);
 
-const { listItems, listData, users } = getData();
-const listDataRef = ref(listData);
+const { listItems, listData: initialListData, users } = getData();
+const listData = ref(initialListData);
 
 const demoItems = [
 	listItems[0],
@@ -28,18 +28,18 @@ function handleClick({ item }) {
 	selected.value = null;
 }
 
-const selected = ref(listDataRef.value[0]);
+const selected = ref(listData.value[0]);
 const refresh = ({ values }) => {
 	message.value = "update";
 
 	// update data
-	const ind = listDataRef.value.findIndex(d => d.id === values.id);
-	listDataRef.value[ind] = values;
+	const ind = listData.value.findIndex(d => d.id === values.id);
+	listData.value[ind] = values;
 };
 
-const select = id => {
+const select = (id) => {
 	setTimeout(() => {
-		selected.value = listDataRef.value.find(d => d.id === id);
+		selected.value = listData.value.find(d => d.id === id);
 	}, 100);
 };
 </script>
@@ -49,7 +49,7 @@ const select = id => {
 
 	<div class="list">
 		<div
-			v-for="data in listDataRef"
+			v-for="data in listData"
 			:key="data.id"
 			class="item"
 			:class="{ active: selected?.id === data.id }"

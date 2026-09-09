@@ -1,40 +1,41 @@
 <script setup>
 defineOptions({ name: "EditorTasklist" });
 
-import { ref } from 'vue';
-import { getData } from '../data';
-import { Editor, registerEditorItem } from '../../src';
+import { ref } from "vue";
+import { getData } from "../data";
+import { Editor, registerEditorItem } from "../../src";
 
-import { Tasklist } from '@svar-ui/vue-tasklist';
-registerEditorItem('tasks', Tasklist);
+import { Tasklist } from "@svar-ui/vue-tasklist";
+registerEditorItem("tasks", Tasklist);
 
 const { listItems, listData: initialListData } = getData();
 const listData = ref(initialListData);
+
 const demoItems = [
 	listItems[0],
 	{
-		comp: 'tasks',
-		key: 'task',
-		label: 'Task',
+		comp: "tasks",
+		key: "task",
+		label: "Task",
 	},
 ];
 
-const message = ref('');
+const message = ref("");
 function handleClick({ item }) {
-	message.value = 'click: ' + item.id;
+	message.value = "click: " + item.id;
 	selected.value = null;
 }
 
 const selected = ref(listData.value[0]);
 const refresh = ({ values }) => {
-	message.value = 'update';
+	message.value = "update";
 
 	// update data
 	const ind = listData.value.findIndex(d => d.id === values.id);
 	listData.value[ind] = values;
 };
 
-const select = id => {
+const select = (id) => {
 	setTimeout(() => {
 		selected.value = listData.value.find(d => d.id === id);
 	}, 100);
@@ -53,7 +54,7 @@ const select = id => {
 			@click="select(data.id)"
 		>
 			<h4>{{ data.label }}</h4>
-			<p>{{ data.description || '' }}</p>
+			<p>{{ data.description || "" }}</p>
 			<sub>starts on: {{ data.start_date.toLocaleDateString() }}</sub>
 		</div>
 	</div>

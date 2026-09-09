@@ -1,6 +1,6 @@
 {
   "name": "@svar-ui/vue-editor",
-  "version": "2.6.1",
+  "version": "2.7.0",
   "description": "SVAR Vue Editor library",
   "productTag": "editor",
   "type": "module",
@@ -35,19 +35,20 @@
     "dist-full/index.css"
   ],
   "dependencies": {
+    "@svar-ui/core-locales": "2.6.1",
+    "@svar-ui/editor-locales": "2.7.0",
     "@svar-ui/lib-dom": "0.14.0",
     "@svar-ui/lib-state": "1.9.7",
     "@svar-ui/lib-vue": "1.1.0",
     "@svar-ui/vue-core": "2.6.1",
-    "@svar-ui/vue-toolbar": "2.6.1",
-    "@svar-ui/vue-comments": "2.6.1",
-    "@svar-ui/vue-tasklist": "2.6.1",
-    "@svar-ui/editor-locales": "2.6.1"
+    "@svar-ui/vue-toolbar": "2.6.1"
   },
   "peerDependencies": {
     "vue": "^3.0.0"
   },
   "devDependencies": {
+    "@svar-ui/vue-comments": "2.6.1",
+    "@svar-ui/vue-tasklist": "2.6.1",
     "@vitejs/plugin-vue": "^6.0.1",
     "eslint": "^9.35.0",
     "eslint-plugin-vue": "^10.5.1",

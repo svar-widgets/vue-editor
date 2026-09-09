@@ -1,17 +1,18 @@
 <script setup>
 defineOptions({ name: "EditorForm" });
 
-import { useAttrs } from 'vue';
+import { useAttrs } from "vue";
 import { Locale } from "@svar-ui/vue-core";
-import en from "../en.js";
+import { en } from "@svar-ui/editor-locales";
 
 import Editor from "./FormEditor.vue";
 import Values from "./Values.vue";
 
+// incoming parameters
 const props = defineProps({
 	values: { default: () => ({}) },
 	items: { default: () => [] },
-	css: { default: '' },
+	css: { default: "" },
 	activeBatch: { default: null },
 	focus: { default: false },
 	autoSave: { default: true },

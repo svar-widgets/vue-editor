@@ -1,73 +1,65 @@
+import Inline from "./cases/Inline.vue";
 import BasicInit from "./cases/BasicInit.vue";
-import ModalPanel from "./cases/ModalPanel.vue";
-import ModalColumns from "./cases/ModalColumns.vue";
-import SidebarPanel from "./cases/SidebarPanel.vue";
-import Batches from "./cases/Batches.vue";
-import SubPanels from "./cases/SubPanels.vue";
-import ChangesAuto from "./cases/ChangesAuto.vue";
-import ChangesConfirmed from "./cases/ChangesConfirmed.vue";
-import CustomButtons from "./cases/CustomButtons.vue";
-import ActionMenu from "./cases/ActionMenu.vue";
-import ToolbarValues from "./cases/ToolbarValues.vue";
+import Modal from "./cases/Modal.vue";
+import Sidebar from "./cases/Sidebar.vue";
+import Tabs from "./cases/Tabs.vue";
+import Sections from "./cases/Sections.vue";
+import Buttons from "./cases/Buttons.vue";
 import Tasklist from "./cases/Tasklist.vue";
 import Comments from "./cases/Comments.vue";
-import Layouts from "./cases/Layouts.vue";
-import BackendComplex from "./cases/BackendComplex.vue";
 import MultipleCombos from "./cases/MultipleCombos.vue";
-import Overflow from "./cases/Overflow.vue";
-import SaveValidatedValues from "./cases/SaveValidatedValues.vue";
+import Fullscreen from "./cases/Fullscreen.vue";
 import Validation from "./cases/Validation.vue";
-import RequiredFields from "./cases/RequiredFields.vue";
 import Locales from "./cases/Locales.vue";
-import Overlay from "./cases/Overlay.vue";
-// import Gantt from "./cases/Gantt.vue";
-// import Kanban from "./cases/Kanban.vue";
-// import Scheduler from "./cases/Scheduler.vue";
+import MultiField from "./cases/MultiField.vue";
+import Uploads from "./cases/Uploads.vue";
+import CodeMirror from "./cases/CodeMirror.vue";
+import TinyMCE from "./cases/TinyMCE.vue";
 
 export const links = [
-	["/base/:skin", "Basic Form", BasicInit, "BasicInit"],
-	["/modal/:skin", "Modal Editor", ModalPanel, "ModalPanel"],
-	[
-		"/columns/:skin",
-		"Modal Editor with columns",
-		ModalColumns,
-		"ModalColumns",
-	],
-	["/sidebar/:skin", "Sidebar Editor", SidebarPanel, "SidebarPanel"],
-	["/changes-auto/:skin", "Changes: auto mode", ChangesAuto, "ChangesAuto"],
-	[
-		"/changes-confirmed/:skin",
-		"Changes: confirmation",
-		ChangesConfirmed,
-		"ChangesConfirmed",
-	],
-	["/batches/:skin", "Batches", Batches, "Batches"],
-	["/subpanels/:skin", "Sub panels", SubPanels, "SubPanels"],
-	["/actions/:skin", "Action menu", ActionMenu, "ActionMenu"],
-	["/buttons/:skin", "Custom buttons", CustomButtons, "CustomButtons"],
-	["/comments/:skin", "Comments", Comments, "Comments"],
-	["/taslkist/:skin", "Tasklist", Tasklist, "Tasklist"],
-	["/layouts/:skin", "Layouts", Layouts, "Layouts"],
-	[
-		"/backend-complex/:skin",
-		"Separate backends",
-		BackendComplex,
-		"BackendComplex",
-	],
-	["/combos/:skin", "Multiple combos", MultipleCombos, "MultipleCombos"],
-	["/overflow/:skin", "Overflow", Overflow, "Overflow"],
-	["/toolbar/:skin", "Toolbar values", ToolbarValues, "ToolbarValues"],
-	["/required/:skin", "Required fields", RequiredFields, "RequiredFields"],
-	["/validation/:skin", "Validation", Validation, "Validation"],
-	[
-		"/validation-save/:skin",
-		"Save validated values",
-		SaveValidatedValues,
-		"SaveValidatedValues",
-	],
-	["/locales/:skin", "Locales", Locales, "Locales"],
-	["/overlay/:skin", "Overlay", Overlay, "Overlay"],
-	// ["/gantt/:skin", "Gantt", Gantt, "Gantt"],
-	// ["/kanban/:skin", "Kanban", Kanban, "Kanban"],
-	// ["/scheduler/:skin", "Scheduler", Scheduler, "Scheduler"],
+	{
+		group: "",
+		items: [["/base/:skin", "Basic Editor", BasicInit, { file: "BasicInit" }]],
+	},
+	{
+		group: "Layout",
+		items: [
+			["/modal/:skin", "As Modal", Modal, { file: "Modal" }],
+			["/sidebar/:skin", "As Sidebar", Sidebar, { file: "Sidebar" }],
+			["/inline/:skin", "Inline", Inline, { file: "Inline" }],
+			["/fullscreen/:skin", "Fullscreen", Fullscreen, { file: "Fullscreen" }],
+			["/tabs/:skin", "With Tabs", Tabs, { file: "Tabs" }],
+			["/sections/:skin", "With Sections", Sections, { file: "Sections" }],
+		],
+	},
+	{
+		group: "Items",
+		items: [
+			["/comments/:skin", "Comments", Comments, { file: "Comments" }],
+			["/files/:skin", "Attachments", Uploads, { file: "Uploads" }],
+			["/taslkist/:skin", "Tasklist", Tasklist, { file: "Tasklist" }],
+			[
+				"/combos/:skin",
+				"Linked lists",
+				MultipleCombos,
+				{ file: "MultipleCombos" },
+			],
+			["/buttons/:skin", "Buttons", Buttons, { file: "Buttons" }],
+			[
+				"/multifield/:skin",
+				"Custom controls",
+				MultiField,
+				{ file: "MultiField" },
+			],
+			["/tinymce/:skin", "Rich Text", TinyMCE, { file: "TinyMCE" }],
+			["/code-mirror/:skin", "Code Mirror", CodeMirror, { file: "CodeMirror" }],
+		],
+	},
+	{
+		group: "Features",
+		items: [
+			["/validation/:skin", "Validation", Validation, { file: "Validation" }],
+			["/locales/:skin", "Locales", Locales, { file: "Locales" }],
+		],
+	},
 ];

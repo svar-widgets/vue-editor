@@ -2,7 +2,7 @@
 import { ref, computed, onMounted, inject } from "vue";
 import { Field } from "@svar-ui/vue-core";
 
-import { getItemHandler } from "../helpers";
+import { getItemHandler } from "../helpers/handlers";
 
 const props = defineProps({
 	editors: {},
@@ -10,6 +10,7 @@ const props = defineProps({
 	css: { default: "" },
 	errors: {},
 	focus: { default: false },
+	readonly: { default: false },
 	onclick: { type: Function },
 	onchange: { type: Function },
 });
@@ -17,7 +18,7 @@ const props = defineProps({
 const root = ref(null);
 
 onMounted(() => {
-	if (props.focus) {
+	if (props.focus && root.value) {
 		// if the focus is already inside the root, don't do anything
 		const focused = document.activeElement;
 		if (focused && root.value.contains(focused)) return;
@@ -39,24 +40,53 @@ const _ = inject("wx-i18n").getGroup("editor");
 
 const overlay = computed(
 	() =>
-		props.editors.config[0].comp === "readonly" &&
+		props.readonly &&
 		props.editors.config.every(
-			editor => !Object.keys(props.data).includes(editor.key)
+			editor =>
+				!(editor.keys || [editor.key]).some(
+					k => k in props.data
+				)
 		)
 );
+
+const isSingle = computed(
+	() => props.editors.config.length === 1 && props.editors.config[0].fill
+);
+
+const onchangeHandler =
+	key =>
+	ev => {
+		props.onchange?.({
+			value: ev.value,
+			key: key,
+			input: ev.input,
+		});
+	};
 </script>
 
 <template>
-	<div :class="['wx-sections', css]" ref="root">
+	<div
+		:class="['wx-sections', css, { 'wx-sections-single': isSingle }]"
+		ref="root"
+	>
 		<slot v-if="$slots.default" />
 		<div v-if="overlay" class="wx-overlay">{{ _("No data") }}</div>
 		<template v-for="editor in editors.config" :key="editor.key">
 			<template v-if="!editor.hidden">
-				<template v-if="editor.comp === 'readonly' || editor.comp === 'section'">
+				<template
+					v-if="
+						editor.comp === 'readonly' ||
+						editor.comp === 'section' ||
+						isSingle
+					"
+				>
 					<component
-						:is="getItemHandler(editor.comp)"
+						:is="getItemHandler(editor.comp, { readonly })"
+						:onchange="onchangeHandler(editor.key)"
 						:label="editor.label"
 						:value="data[editor.key]"
+						:readonly="readonly"
+						:error="errors && errors[editor.key]"
 						v-bind="editor"
 						:section-key="editor.key"
 						:onclick="onclick"
@@ -71,16 +101,10 @@ const overlay = computed(
 							:required="editor.required"
 						>
 							<component
-								:is="getItemHandler(editor.comp)"
-								:onchange="(ev) => {
-									onchange &&
-										onchange({
-											value: ev.value,
-											key: editor.key,
-											input: ev.input,
-										});
-								}"
+								:is="getItemHandler(editor.comp, { readonly })"
+								:onchange="onchangeHandler(editor.key)"
 								v-bind="editor"
+								:readonly="readonly"
 								:label="undefined"
 								:error="errors && errors[editor.key]"
 								:value="data[editor.key]"
@@ -101,6 +125,10 @@ const overlay = computed(
 	text-align: left;
 	--wx-field-width: 600px;
 	margin: 12px 20px 0;
+}
+.wx-sections-single {
+	margin: 0 20px;
+	height: 100%;
 }
 .wx-message {
 	margin-top: calc(var(--wx-field-gutter) * -1);

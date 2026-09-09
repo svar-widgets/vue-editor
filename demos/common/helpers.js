@@ -1,9 +1,11 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import { links as raw } from "../routes";
 
+const flatLinks = raw.flatMap(g => g.items);
+
 // Create route configuration for Vue Router
 function getRoutes(skinSettings) {
-	const routes = raw.map((a) => ({
+	const routes = flatLinks.map((a) => ({
 		path: a[0],
 		component: a[2],
 		props: { ...skinSettings }
@@ -22,6 +24,9 @@ function getLinks() {
 	return raw;
 }
 
+function getFlatLinks() {
+	return flatLinks;
+}
 
 // Create router instance
 const router = createRouter({
@@ -29,5 +34,4 @@ const router = createRouter({
 	routes: getRoutes({}),
 });
 
-
-export { router, getRoutes, getLinks };
+export { router, getRoutes, getLinks, getFlatLinks };

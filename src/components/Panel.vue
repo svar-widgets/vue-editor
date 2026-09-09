@@ -8,12 +8,7 @@ import { subscribe } from "@svar-ui/lib-vue";
 import Columns from "./Columns.vue";
 import Toolbar from "./buttons/Toolbar.vue";
 
-import {
-	SaveButton,
-	CancelButton,
-	CloseIcon,
-	Spacer,
-} from "./buttons/buttons.js";
+import { SaveButton, CancelButton, CloseIcon, Spacer } from "./buttons/buttons";
 
 const props = defineProps({
 	data: {},
@@ -27,19 +22,23 @@ const props = defineProps({
 	errors: {},
 	readonly: {},
 	autoSave: {},
-	hotkeys: {},
 	onclick: { type: Function },
 	onkeydown: { type: Function },
 	onchange: { type: Function },
+	hotkeys: {},
 });
 
 const _ = inject("wx-i18n").getGroup("editor");
 
-const autoBars = computed(() => props.topBar === true && props.bottomBar === true);
+const autoBars = computed(
+	() => props.topBar === true && props.bottomBar === true
+);
 
 const tbar = computed(() => {
 	let bar =
-		props.topBar && props.topBar.items ? props.topBar.items.map(b => ({ ...b })) : [];
+		props.topBar && typeof props.topBar === "object" && props.topBar.items
+			? props.topBar.items.map(b => ({ ...b }))
+			: [];
 
 	if (autoBars.value) {
 		if (!props.readonly) {
@@ -59,7 +58,9 @@ const tbar = computed(() => {
 
 const bbar = computed(() => {
 	let bar =
-		props.bottomBar && props.bottomBar.items
+		props.bottomBar &&
+		typeof props.bottomBar === "object" &&
+		props.bottomBar.items
 			? props.bottomBar.items.map(b => ({ ...b }))
 			: [];
 
@@ -77,6 +78,7 @@ const bbar = computed(() => {
 const getHotkeyHandler = item => {
 	if (!item) return false;
 	return event => {
+		if (!event) return;
 		const target = event.target;
 
 		if (
@@ -101,6 +103,14 @@ const getHotkeyHandler = item => {
 const node = ref(null);
 const buttons = computed(() => [...tbar.value, ...bbar.value]);
 
+// pass-through bar config (everything except `items`, which is computed)
+const topBarProps = computed(() =>
+	props.topBar && typeof props.topBar === "object" ? props.topBar : {}
+);
+const bottomBarProps = computed(() =>
+	props.bottomBar && typeof props.bottomBar === "object" ? props.bottomBar : {}
+);
+
 const hk = subscribe(libHotkeys);
 
 watchEffect(() => {
@@ -112,15 +122,23 @@ watchEffect(() => {
 		),
 		delete: getHotkeyHandler(buttons.value.find(t => t.id === "delete")),
 	};
-	const config = { ...defaultHotkeys, ...(props.hotkeys || {}) };
-	hk.value.configure(config, node.value);
+	const config = { ...defaultHotkeys, ...props.hotkeys };
+	if (node.value) hk.value.configure(config, node.value);
 });
 </script>
 
 <template>
-	<div :class="props.css" ref="node" tabindex="-1" style="outline: none;">
-		<Toolbar v-bind="props.topBar" :items="tbar" :values="props.data" :onclick="props.onclick" />
-		<div class="wx-content" :class="{ 'wx-layout-columns': props.layout === 'columns' }">
+	<div :class="props.css" ref="node" tabindex="-1" style="outline: none">
+		<Toolbar
+			v-bind="topBarProps"
+			:items="tbar"
+			:values="props.data"
+			:onclick="props.onclick"
+		/>
+		<div
+			class="wx-content"
+			:class="{ 'wx-layout-columns': props.layout === 'columns' }"
+		>
 			<slot v-if="$slots.default" />
 			<Columns
 				:editors="props.editors"
@@ -128,11 +146,12 @@ watchEffect(() => {
 				:data="props.data"
 				:focus="props.focus"
 				:errors="props.errors"
+				:readonly="props.readonly"
 				:onclick="props.onclick"
 				:onchange="props.onchange"
 			/>
 			<Toolbar
-				v-bind="props.bottomBar"
+				v-bind="bottomBarProps"
 				:items="bbar"
 				:values="props.data"
 				:top="false"

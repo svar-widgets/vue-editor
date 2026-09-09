@@ -1,26 +1,35 @@
 <script setup>
-import { inject, computed } from 'vue';
-import { Field } from '@svar-ui/vue-core';
+import { inject, computed } from "vue";
+import { Field } from "@svar-ui/vue-core";
+import { dateToString } from "@svar-ui/lib-dom";
 
-const _ = inject('wx-i18n').getGroup('editor');
+const ctx = inject("wx-i18n");
+const _ = ctx.getGroup("editor");
+const { calendar, formats } = ctx.getRaw();
 
 const props = defineProps({
 	value: {},
 	options: {},
 	label: {},
+	format: {},
 });
 
 const text = computed(() => {
 	let text = props.value;
-	if (typeof props.value === 'boolean') {
-		text = props.value ? _('Yes') : _('No');
+	if (typeof props.value === "boolean") {
+		text = props.value ? _("Yes") : _("No");
+	}
+
+	if (props.value instanceof Date) {
+		const f = props.format || formats.dateFormat;
+		text = dateToString(f, calendar)(props.value);
 	}
 
 	if (props.options) {
-		const option = props.options.find(o => o.id === props.value);
-		if (option) {
-			text = option.label;
-		}
+		text = (Array.isArray(props.value) ? props.value : [props.value])
+			.map(id => props.options.find(o => o.id === id)?.label)
+			.filter(o => o !== undefined)
+			.join(", ");
 	}
 
 	return text;
